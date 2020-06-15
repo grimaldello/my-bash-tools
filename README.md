@@ -1,8 +1,8 @@
 # my-bash-tools
-A collection of bash tools that I made by myself
+A collection of bash tools
 
 
 ## Dependencies:
 
--For Ubuntu:
+- Ubuntu (tested on 20.04):
 `apt install xclip ffmpeg base64`
