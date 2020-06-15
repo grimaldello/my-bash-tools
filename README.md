@@ -7,9 +7,8 @@ A collection of bash tools
 `apt install xclip ffmpeg base64`
 
 
-## Usage
+## Installation
 
-- Add the cloned folder to PATH
 ```
 # Add to .bashrc the folder with scripts
 echo "PATH=$PATH:<cloned-path>" >> ~/.bashrc
