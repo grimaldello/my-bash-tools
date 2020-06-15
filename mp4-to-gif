@@ -1,29 +1,49 @@
 #!/bin/bash
 
-OUTPUT_FILE_NAME="out.gif";
-FRAME_RATE=5;
+ARG_INPUT_VIDEO_FILE_NAME=$1;
+ARG_OUTPUT_GIF_FILE_NAME=$2;
+ARG_OUTPUT_FRAME_RATE=$3;
 
-if [ -z "$1" ]
-  then
-    echo "ERROR! No file video input supplied as 1st parameter.";
-    echo "Examples:";
-    echo "mp4-to-gif.sh video.mp4 video.gif";
-    echo "mp4-to-gif.sh video.mp4 video.gif 10";
-    exit 1;
-fi
+DEFAULT_OUTPUT_FILE_NAME="out.gif";
+DEFAULT_OUTPUT_FRAME_RATE=5;
 
-if [ -z "$2" ]
+if [ -x "$(command -v ffmpeg)" ]
   then
-    echo "WARNING! No output file name supplied as 2nd parameter. Default output name: $OUTPUT_FILE_NAME";
+  
+    if [ -z "$ARG_INPUT_VIDEO_FILE_NAME" ]
+      then
+        echo "ERROR! No file video input supplied as 1st parameter.";
+        echo "Usage examples:";
+        echo "mp4-to-gif.sh video.mp4 video.gif";
+        echo "mp4-to-gif.sh video.mp4 video.gif 10";
+        exit 1;
+      else
+        COMMAND_INPUT_VIDEO_FILE_NAME=$ARG_INPUT_VIDEO_FILE_NAME;
+    fi
+    
+    if [ -z "$ARG_OUTPUT_GIF_FILE_NAME" ]
+      then
+        COMMAND_OUTPUT_GIF_FILE_NAME=$DEFAULT_OUTPUT_FILE_NAME;
+        echo "WARNING! No output file name supplied as 2nd parameter. Default output name: $COMMAND_OUTPUT_GIF_FILE_NAME";
+      else
+        COMMAND_OUTPUT_GIF_FILE_NAME=$ARG_OUTPUT_GIF_FILE_NAME;
+    fi
+    
+    if [ -z "$ARG_OUTPUT_FRAME_RATE" ]
+      then
+        COMMAND_OUTPUT_FRAME_RATE=$DEFAULT_OUTPUT_FRAME_RATE;
+        echo "WARNING! No frame rate supplied as 3rd parameter. Value set to: $COMMAND_OUTPUT_FRAME_RATE";
+      else
+        COMMAND_OUTPUT_FRAME_RATE=$ARG_OUTPUT_FRAME_RATE;
+    fi
+    
+    # Execute video conversion to gif
+    ffmpeg -i $COMMAND_INPUT_VIDEO_FILE_NAME -r $COMMAND_OUTPUT_FRAME_RATE -pix_fmt rgb24 $COMMAND_OUTPUT_GIF_FILE_NAME
+    
   else
-    OUTPUT_FILE_NAME=$2;
+    echo "ERROR! ffmpeg must be installed and in PATH.";
 fi
 
-if [ -z "$3" ]
-  then
-    echo "WARNING! No frame rate supplied as 3rd parameter. Value set to: $FRAME_RATE";
-  else
-    FRAME_RATE=$3;
-fi
 
-ffmpeg -i $1 -r $FRAME_RATE -pix_fmt rgb24 $OUTPUT_FILE_NAME
+
+

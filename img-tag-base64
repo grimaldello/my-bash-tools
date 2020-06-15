@@ -1,25 +1,40 @@
 #!/bin/bash
 
-if [ -z "$1" ]
+ARG_IMAGE_INPUT=$1;
+ARG_IMAGE_FORMAT=$2;
+
+DEFAULT_IMAGE_FOMRAT="jpeg";
+
+if [ -z "$ARG_IMAGE_INPUT" ]
   then
-    echo "No image path supplied"
-else
-
-  OUTPUT="<img src=\"data:image/jpeg;base64,$(base64 -w 0 $1)\">" 
-
-  echo "$OUTPUT"
-  if [ -x "$(command -v xclip)" ]
-    then
-      version="$(uname -a)"
-      if [[ $version == *"Microsoft"* ]]
-      then
-        echo -n "$OUTPUT" | clip.exe
-      else
-        echo -n "$OUTPUT" | xclip -selection clipboard
-      fi
-      echo ""
-      echo "img tag also copied to clipboard"
+    echo "ERROR! No input image path supplied";
+    echo "Usage examples:";
+    echo "img-tag-base64 image.png";
+    exit 1;
   else
-    echo "$OUTPUT"
-  fi
+    COMMAND_IMAGE_INPUT=$ARG_IMAGE_INPUT;
 fi
+
+if [ -z "$ARG_IMAGE_FORMAT" ]
+  then
+    COMMAND_IMAGE_FORMAT=$DEFAULT_IMAGE_FOMRAT;
+    echo "WARNING! No image format for base64 supplied. Default value set to: $COMMAND_IMAGE_FORMAT";
+  else
+    COMMAND_IMAGE_FORMAT=$ARG_IMAGE_FORMAT;
+fi
+
+echo "Image format output: $COMMAND_IMAGE_FORMAT";
+    
+OUTPUT="<img src=\"data:image/$COMMAND_IMAGE_FORMAT;base64,$(base64 -w 0 $COMMAND_IMAGE_INPUT)\">" 
+
+echo "$OUTPUT";
+
+if [ -x "$(command -v xclip)" ]
+  then
+    echo -n "$OUTPUT" | xclip -selection clipboard
+    echo ""
+    echo "HTML image tag also copied to clipboard"
+else
+  echo "$OUTPUT"
+fi
+
