@@ -24,8 +24,8 @@ if [ -z "$ARG_IMAGE_FORMAT" ]
 fi
 
 echo "Image format output: $COMMAND_IMAGE_FORMAT";
-    
-OUTPUT="<img src=\"data:image/$COMMAND_IMAGE_FORMAT;base64,$(base64 -w 0 $COMMAND_IMAGE_INPUT)\">" 
+
+OUTPUT="<img src=\"data:image/$COMMAND_IMAGE_FORMAT;base64,$(base64 -w 0 $COMMAND_IMAGE_INPUT)\">";
 
 echo "$OUTPUT";
 
@@ -34,7 +34,5 @@ if [ -x "$(command -v xclip)" ]
     echo -n "$OUTPUT" | xclip -selection clipboard
     echo ""
     echo "HTML image tag also copied to clipboard"
-else
-  echo "$OUTPUT"
 fi
 
